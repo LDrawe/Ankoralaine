@@ -1,0 +1,5 @@
+*.sw[a-p]
+*_backup.svg
+*.bak
+.directory
+icon-theme.cache
