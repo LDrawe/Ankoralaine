@@ -72,6 +72,17 @@ alt_distromatch() {
     fi
 }
 
+# Get machine hardware name, which will indicate the processor architecture
+processor_name="$(uname -m)"
+
+# Check if the processor is AMD
+if [[ "$processor_name" == "x86_64" && $(cat /proc/cpuinfo | grep "vendor_id" | uniq | awk '{print $3}') == "AuthenticAMD" ]]; then
+  # If so, change the cpu info icon to AMD
+  cp ./apps/scalable/cpu-amd.svg ./apps/scalable/cpuinfo.svg
+else
+  cp ./apps/scalable/cpu-intel.svg ./apps/scalable/cpuinfo.svg
+fi
+
 # define variables
 # set distributor logo based on distro detected through lsb_release
 DISTRO=$(format "$(lsb_release -si 2>/dev/null)")
@@ -193,17 +204,6 @@ esac
 
 echo "Updated desktop mimetype icons."
 
-# Get machine hardware name, which will indicate the processor architecture
-processor_name="$(uname -m)"
-
-# Check if the processor is AMD
-if [[ "$processor_name" == "x86_64" && $(cat /proc/cpuinfo | grep "vendor_id" | uniq | awk '{print $3}') == "AuthenticAMD" ]]; then
-  # If so, change the cpu info icon to AMD
-  cp ./apps/scalable/cpu-amd.svg ./apps/scalable/cpuinfo.svg
-else
-  cp ./apps/scalable/cpu-intel.svg ./apps/scalable/cpuinfo.svg
-fi
-
-rm -rf ./extras
+cd "$wd"
 
 gtk-update-icon-cache -f ../$(basename `pwd`)
